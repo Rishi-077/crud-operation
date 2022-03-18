@@ -2,35 +2,65 @@ import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
-function Form () {
-  const [ user, setUser ] = useState( {
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-    job: "" 
-  } );
+function Update ()
+{
+  const [ users, setUser ] = useState( [] );
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [job, setJob ] = useState( "" )
 
-  
-  const onInputChange =  (e)  =>
+  //  const loadUser = () =>
+  // {
+  //   axios.get( `http://localhost:3003/users`)
+  //     .then( ( res ) =>
+  //     {
+  //       setUser(res.data);
+  //     } )
+  //     .catch( ( e ) =>
+  //     {
+  //     console.log(alert("something went wrong (:"));
+  //   })
+  // }
+
+    function selectUser(id)
+    {
+      // let item=users[id-1];
+      setName(users.name)
+          setEmail(users.email)
+          setPhone(users.phone);
+          setJob(users.job)
+    }
+    
+  function updateUser()
   {
-   
-    setUser( {...user , [e.target.name] : e.target.value  });
-
-  };
+    let item={name,phone,email,job}
+    console.warn( "item", item )
+     axios.get( `http://localhost:3003/users/${users}`)
+      .then( ( res ) =>
+      {
+        setUser(res.data);
+      } )
+      .catch( ( e ) =>
+      {
+      console.log(alert("something went wrong (:"));
+      } )
+    
+    
+    
+  }
 
   const onSubmit = ( e ) =>
   {
     e.preventDefault();
-    const result = axios.post( 'http://localhost:3003/users', user);
-    console.log(result);
+    axios.put(`http://localhost:3003/users/${users}`) ;
   }
 
   
   return ( 
-    <div className='container mt-5' id='home'>
+    <div className='container mt-5' id='update'>
       <div className='py-4'>
-        <h1>Enter Details</h1>
+        <h1>Update Details</h1>
         <hr />
         <br/>
 
@@ -43,7 +73,8 @@ function Form () {
               class="form-control"
               placeholder="Name"
               name="name"
-              onChange={e => onInputChange(e)}
+              value={name}
+              onChange={e => setName(e.target.value)}
             />
         </div>
         
@@ -55,8 +86,9 @@ function Form () {
               type="email"
               placeholder="E-mail address"
               class="form-control"
+              value={email}
               name='email'
-              onChange={e => onInputChange(e)}
+              onChange={e => setEmail(e.target.value)}
               />
          </div>
           
@@ -70,7 +102,8 @@ function Form () {
               class="form-control"
               id="Number"
               name='phone'
-              onChange={e => onInputChange(e)}
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
             />
         </div>
           
@@ -80,7 +113,8 @@ function Form () {
             <select
               class="form-select"
               name='job'
-              onChange={e => onInputChange(e)}
+              value={job}
+              onChange={e => setJob(e.target.value)}
             >
               <option selected>select your job roles</option>
               <option value="Web Developer">Web Developer</option>
@@ -94,7 +128,7 @@ function Form () {
         <div class="col-12">
             <button
               type="submit"
-              class="btn btn-primary">Add</button>
+              class="btn btn-primary">Update User</button>
         </div>
       </form>
     </div>
@@ -102,4 +136,4 @@ function Form () {
    );
 }
 
-export default Form;
+export default Update;
