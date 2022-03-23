@@ -112,7 +112,7 @@ function Update ()
             <label for="job" class="form-label">Job title</label>
             <select
               class="form-select"
-              name='job'
+              name='job'  
               value={job}
               onChange={e => setJob(e.target.value)}
             >
@@ -128,6 +128,7 @@ function Update ()
         <div class="col-12">
             <button
               type="submit"
+              onclick={updateUser}
               class="btn btn-primary">Update User</button>
         </div>
       </form>

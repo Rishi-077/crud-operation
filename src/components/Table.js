@@ -48,21 +48,24 @@ function TableContent()
   const selectUser = (id) =>
   {
     let item = users[ id - 1 ];
+      
       setName(item.name)
       setEmail(item.email)
       setPhone(item.phone);
       setJob( item.job )
-      setUserId(item.userId)
+      setUserId(item.id)
   }
     
-  const updateUser = () =>
+  const updateUser = (e) =>
   {
-    const item = {userId ,name, email, phone, job}
-     axios.put( `http://localhost:3003/users/${item}`)
+    e.preventDefault();
+    const user = { userId, name, email, phone, job }
+    console.log(user);
+     axios.put( `http://localhost:3003/users/${userId}` )
        .then( ( res ) =>
-       {
+       {  
          setUser( res.data );
-         console.log(users);
+         console.log(res.data)
        } )
       .catch( ( e ) =>
       {
