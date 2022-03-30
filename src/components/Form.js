@@ -1,8 +1,22 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import {useForm} from 'react-hook-form'
 
-function Form () {
+
+
+function Form ()
+{
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    reset,
+  } = useForm();
+  
   const [ user, setUser ] = useState( {
     id: "",
     name: "",
@@ -16,16 +30,23 @@ function Form () {
   {
    
     setUser( {...user , [e.target.name] : e.target.value  });
+    
 
   };
 
-  const onSubmit = ( e ) =>
+  const onSubmit = (data) =>
   {
-    e.preventDefault();
-    const result = axios.post( 'http://localhost:3003/users', user);
-    console.log(result);
+    
+    const result = axios.post( 'http://localhost:3003/users', data);
+    console.log( result );
+    reset();
   }
 
+  const onError = ( errors ) =>
+  {
+    console.log(errors, alert('Enter all inputs :)') );
+    
+  }
   
   return ( 
     <div className='container mt-5' id='home'>
@@ -34,56 +55,94 @@ function Form () {
         <hr />
         <br/>
 
-        <form class="row g-4" onSubmit= {(e) => onSubmit(e)}>
+        <form class="row g-4" onSubmit={handleSubmit(onSubmit, onError)}>
 
-        <div class="col-md-6">
+        <div class="col-md-6 form-group">
             <label for="Name" class="form-label">Name</label>
             <input
               type="text"
-              class="form-control"
+              className='form-control'
               placeholder="Name"
               name="name"
-              onChange={e => onInputChange(e)}
+              onChange={e => onInputChange( e )}
+              {...register("name", {
+                 required: "Name is required",
+                 pattern: {
+                   value: /^([a-zA-Z ]){2,30}$/,
+                   message: "Value is Invalid",
+                 }
+               } )}
+              onKeyUp={() => {
+                trigger("name");
+              }}
             />
-        </div>
+            {errors.name &&
+              ( <small className='text-danger'>{ errors.name.message} </small> )}
+             </div>
         
         
           
-         <div class="col-md-6">
+         <div class="col-md-6 form-group">
           <label for="inputEmail4" class="form-label">Email</label>
             <input
-              type="email"
+              type="text"
               placeholder="E-mail address"
-              class="form-control"
+              className='form-control'
               name='email'
               onChange={e => onInputChange(e)}
-              />
+              {...register("email", { required: "Email is Required" ,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                }})}
+                onKeyUp={() => {
+                  trigger("email");
+                }}
+            />
+             {errors.email && (
+                <small className="text-danger">{errors.email.message}</small>
+              )}
          </div>
           
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 form-group">
           <label for="Phone no" class="form-label">Phone no</label>
             <input
-              type="Phone no"
+              type="text"
+              className='form-control'
               placeholder="Phone"
-              class="form-control"
               id="Number"
               name='phone'
-              onChange={e => onInputChange(e)}
-            />
+              onChange={e => onInputChange( e )}
+               {...register("phone", { required: "Phone is Required",
+                pattern: {
+                  value: /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
+                  message: "Invalid phone no",
+                },
+               })}
+               onKeyUp={() => {
+                trigger("phone");
+              }}
+              />
+              {errors.phone && (
+                <small className="text-danger">{errors.phone.message}</small>
+              )}
         </div>
           
 
-          <div class="col-md-6">
+          <div class="col-md-6 form-group">
             <label for="job" class="form-label">Job title</label>
             <select
               class="form-select"
+              {...register("job", {
+                required: 'job is required',
+              } )}
               name='job'
               onChange={e => onInputChange(e)}
             >
-              <option selected>select your job roles</option>
-              <option value="Web Developer">Web Developer</option>
+              {/* <option selected>select your job roles</option> */}
+              <option selected value="Web Developer">Web Developer</option>
               <option value="App Developer">App Developer</option>
               <option value="Data analysis">Data analysis</option>
               <option value="Product manager">Product manager</option>
