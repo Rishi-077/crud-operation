@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 
 import Form from './components/Form';
@@ -6,15 +7,17 @@ import Table from './components/Table';
 // import Update from './components/Update';
 
 function App() {
+
+
   return (
-   <>
-    <Navbar />
+    <>
+      <Navbar />
       <Form />
       <Table />
       {/* <Update/> */}
-   </>
-     
-);
+    </>
+
+  );
 }
 
 export default App;
